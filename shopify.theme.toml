@@ -1,0 +1,5 @@
+# Development
+[environments.development]
+store = "district-ichi.myshopify.com"
+theme = "192842727787"
+ignore = ["config/settings_data.json"]  
