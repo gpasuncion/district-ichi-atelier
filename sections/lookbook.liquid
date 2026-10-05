@@ -1,0 +1,67 @@
+{%- liquid
+  assign is_product_page = false
+  assign current_product_id = ''
+  
+  if template.name == 'product'
+    assign is_product_page = true
+    assign current_product_id = product.id | prepend: 'gid://shopify/Product/'
+  endif
+
+  # Loop through the metaobject_list to create a comma-separated string of handles
+  assign selected_handles = ''
+  if section.settings.lookbook_list != blank
+    for lookbook in section.settings.lookbook_list
+      if forloop.first
+        assign selected_handles = lookbook.system.handle
+      else
+        assign selected_handles = selected_handles | append: ',' | append: lookbook.system.handle
+      endif
+    endfor
+  endif
+-%}
+
+{% if template.name != 'index' or selected_handles != blank %}
+  <div 
+    class="lookbook" 
+    data-section-id="{{ section.id }}"
+    data-is-product-page="{{ is_product_page }}"
+    data-product-id="{{ current_product_id }}"
+    data-selected-handles="{{ selected_handles }}"
+    data-bg-color="{{ section.settings.bg_color }}"
+    data-text-shop="{{ 'lookbook.shop_the_look' | t }}"
+    data-text-prev="{{ 'lookbook.previous_look' | t }}"
+    data-text-next="{{ 'lookbook.next_look' | t }}"
+    data-text-view="{{ 'lookbook.view_product' | t }}"
+    data-text-styled="{{ 'lookbook.styled_in' | t }}"
+    data-text-counter="{{ 'lookbook.look_counter' | t }}"
+  ></div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Lookbook",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "On product pages, this section auto-detects lookbooks featuring the product (max 2) and ignores the selection below."
+    },
+    {
+      "type": "metaobject_list",
+      "id": "lookbook_list",
+      "label": "Select Lookbooks (Homepage)",
+      "metaobject_type": "lookbook"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f4f4f4"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lookbook"
+    }
+  ]
+}
+{% endschema %}

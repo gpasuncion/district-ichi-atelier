@@ -173,5 +173,10 @@
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}
     {% endif %}
+
+    <script>
+      window.SHOPIFY_STOREFRONT_TOKEN = "{{ shop.metafields.storefront.public_access_token }}";
+    </script>
+    <script src="{{ 'react-lookbook.bundle.js' | asset_url }}" defer="defer"></script>
   </body>
 </html>
